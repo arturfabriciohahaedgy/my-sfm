@@ -155,6 +155,8 @@ static void toggle_df(const Arg *arg);
 static void start_filter(const Arg *arg);
 static void start_vmode(const Arg *arg);
 static void exit_vmode(const Arg *arg);
+static void start_bkmrk(const Arg *arg);
+static void exit_bkmrk(const Arg *arg);
 static void start_change(const Arg *arg);
 static void exit_change(const Arg *arg);
 static void selup(const Arg *arg);
@@ -185,6 +187,7 @@ static int listdir(Pane *);
 static void t_resize(void);
 static void get_shell(void);
 static void opnsh(const Arg *arg);
+static void drgon(const Arg *arg);
 static void set_panes(void);
 static void draw_frame(void);
 static void refresh(const Arg *arg);
@@ -205,6 +208,7 @@ static size_t sel_len = 0;
 static char **sel_files;
 static int cont_vmode = 0;
 static int cont_change = 0;
+static int cont_bkmrk = 0;
 static pid_t fork_pid = 0, main_pid;
 #if defined(_SYS_INOTIFY_H)
 #define READEVSZ 16
@@ -919,6 +923,8 @@ bkmrk(const Arg *arg)
 	cpane->parent_row = 1;
 	cpane->hdir = 1;
 	PERROR(listdir(cpane) < 0);
+	if (cont_bkmrk >= 0)
+		exit_bkmrk(NULL);
 }
 
 static int
@@ -1084,6 +1090,11 @@ opnsh(const Arg *arg)
 		print_error("process failed non-zero exit");
 }
 
+static void
+drgon(const Arg *arg)
+{
+}
+
 static int
 fsev_init(void)
 {
@@ -1243,6 +1254,36 @@ exit_vmode(const Arg *arg)
 	refresh_pane(cpane);
 	add_hi(cpane, cpane->hdir - 1);
 	cont_vmode = -1;
+}
+
+static void
+start_bkmrk(const Arg *arg)
+{
+	if (cpane->dirc < 1)
+		return;
+	struct tb_event fev;
+
+	cont_bkmrk = 0;
+	print_prompt("b [\\]");
+	tb_present();
+	while (tb_poll_event(&fev) != 0) {
+		switch (fev.type) {
+		case TB_EVENT_KEY:
+			grabkeys(&fev, bkeys, bkeyslen);
+			if (cont_bkmrk == -1)
+				return;
+			tb_present();
+			break;
+		}
+	}
+}
+
+static void
+exit_bkmrk(const Arg *arg)
+{
+	refresh_pane(cpane);
+	add_hi(cpane, cpane->hdir - 1);
+	cont_bkmrk = -1;
 }
 
 static void
