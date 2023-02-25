@@ -1,82 +1,38 @@
-<img src="https://afify.dev/img/sfm.png" alt="sfm logo"/>
+# My build of sfm - simple file manager
 
-**simple file manager**
+A version of the [simple file manager (sfm)][https://github.com/afify/sfm] tweaked and hacked to make it more for my liking: I don't need to say this, but all the credit and hard work goes to [afify][https://github.com/afify] for making the project in the first place.
 
-[![Language grade: C/C++](https://img.shields.io/lgtm/grade/cpp/g/afify/sfm.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/afify/sfm/context:cpp)
-[![Build status](https://ci.appveyor.com/api/projects/status/goq88ahjyvtjrui2?svg=true)](https://ci.appveyor.com/project/afify/sfm)
-[![code-inspector](https://www.code-inspector.com/project/19656/score/svg)](https://frontend.code-inspector.com/public/project/19656/sfm/dashboard)
-[![code-inspector](https://www.code-inspector.com/project/19656/status/svg)](https://frontend.code-inspector.com/public/project/19656/sfm/dashboard)
+# Features
 
-Description
-------------
-sfm is a simple file manager for unix-like systems.
-* pthreads(7) to read events, no timers.
-* BSD kqueue(2) - kernel event notification mechanism.
-* Linux inotify(7) - monitoring filesystem events.
-* dual pane.
-* bookmarks.
-* open files by extension.
-* bottom statusbar.
-* vim-like key bindings.
-* filter.
-* no dependencies.
-* c99 static linking.
-* based on [termbox](https://github.com/nsf/termbox).
-* Inspired by [vifm](https://vifm.info/) and [noice](https://git.2f30.org/noice/).
-* Follows the suckless [philosophy](https://suckless.org/philosophy/).
+Currently there's only one:
 
-Patches
--------
-[sfm-patches](https://github.com/afify/sfm-patches)
+* Instead of binding keys directly to bookmarks, you can bind them to a "BMARK MODE" of sorts, making more space for other bindings.
 
-Performance
-------------
-```sh
-$ perf stat -r 10 sfm
+# TODO
+
+I intent to add more to this list as time goes on...
+
+* Make a keybiding for the [dragon][https://github.com/mwh/dragon] utility.
+* Make an Emacslike prompt for asking about file deletion.
+
+# Installation
+
+* You can basically follow the [guide on sfm's repo][https://github.com/afify/sfm#installation]. But the really short instructions are:
+1. Clone the repo somewhere:
+
+``` sh
+git clone https://github.com/arturfabriciohahaedgy/my-sfm
 ```
 
-Options
--------
-```sh
-$ sfm [-v]
-$ man sfm
-```
-<img src="https://afify.dev/img/sfm_sc.png" alt="sfm screenshot" width="800"/>
+2. `cd` into the dir and build it:
 
-Installation
-------------
-<a href="https://repology.org/project/sfm-afify/versions">
-    <img src="https://repology.org/badge/vertical-allrepos/sfm-afify.svg" alt="Packaging status">
-</a>
-
-**current**
-```sh
-git clone git://git.afify.dev/sfm
-cd sfm/
+``` sh
+cd my-sfm
 make
-make install
-```
-**latest release**
-```sh
-[ "$(uname)" = "Linux" ] && shacmd="sha256sum" grepf="--color=never"|| shacmd="sha256"
-latest=$(curl -s https://git.afify.dev/sfm/tags.xml | grep $grepf -m 1 -o "\[v.*\]" | tr -d '[]')
-tgz="https://git.afify.dev/sfm/releases/sfm-${latest}.tar.gz"
-sha="${tgz}.sha256"
-wget "${tgz}"
-wget "${sha}"
-${shacmd} -c "sfm-${latest}.tar.gz.sha256" && \
-tar -xzf "sfm-${latest}.tar.gz" && cd "sfm-${latest}" && \
-make
-make install
 ```
 
-Run
----
-```sh
-$ sfm
-```
+3. `Install it`
 
-Configuration
--------------
-The configuration of sfm is done by creating a custom config.h
-and (re)compiling the source code. This keeps it fast, secure and simple.
+``` sh
+sudo make install
+```
